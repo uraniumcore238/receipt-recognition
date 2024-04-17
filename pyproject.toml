@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "receipt-recognition"
+version = "0.1.0"
+description = ""
+authors = ["SergeiT <uraniumcore238@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+pytesseract = "0.3.10"
+pillow = "10.3.0"
+pytest = "8.1.1"
+pytest-clarity = "1.0.1"
+mypy = "1.9.0"
+pydantic = "2.6.4"
+pre-commit = "3.7.0"
+ruff = "0.3.5"
+fastapi = "0.110.1"
+uvicorn = {version = "0.29.0", extras = ["standard"]}
+sqlalchemy = "2.0.29"
+pytest-cov = "^5.0.0"
+faker = "^24.11.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
