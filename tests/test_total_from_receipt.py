@@ -1,3 +1,5 @@
+import datetime
+
 from receipts.text_to_sum import extract_totals, get_max_number, extract_total_lines, total_synonyms
 from unittest.mock import patch
 
@@ -21,4 +23,15 @@ def test__extract_total_lines__return_none_if_total_not_found(make_receipt):
 
 def test__extract_total_lines__return_lines_below_total_if_total_found(make_receipt):
     receipt = make_receipt(total_part="total: 150.22")
-    assert extract_total_lines(receipt, synonyms=["TOTAL", "total"]) == ['total: 150.22\n2024-04-17']
+    today = datetime.date.today()
+    assert extract_total_lines(receipt, synonyms=["TOTAL", "total"]) == [f'total: 150.22\n{today}']
+
+
+def test__extract_totals__return_float_from_all_numbers():
+    any_numbers_in_receipt = ['15.22', '150,5', '147', '0007895', '13:25']
+    assert extract_totals(any_numbers_in_receipt) == [15.22, 150.5]
+
+
+def test__extract_totals__return_empty_list_from_all_numbers_if_float_not_found():
+    any_numbers_in_receipt = ['147', '0007895', '13:25']
+    assert extract_totals(any_numbers_in_receipt) == []

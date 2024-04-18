@@ -4,6 +4,8 @@ ifeq (,$(wildcard .env))
 	export
 endif
 
+export PYTHONPATH :=$(shell pwd):$(PYTHONPATH)
+
 style:
 	ruff .
 
