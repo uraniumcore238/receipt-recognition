@@ -1,12 +1,18 @@
+ifeq (,$(wildcard .env))
+	$(info Found .env file.)
+	include .env
+	export
+endif
+
 style:
-    ruff .
+	ruff .
 
 types:
-    mypy receipt-recognition
+	mypy receipt-recognition
 
 tests:
-    pytest .
+	pytest .
 
 check:
-    make -j3 style types tests
+	make -j3 style types tests
     
