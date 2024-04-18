@@ -35,3 +35,7 @@ def test__extract_totals__return_float_from_all_numbers():
 def test__extract_totals__return_empty_list_from_all_numbers_if_float_not_found():
     any_numbers_in_receipt = ['147', '0007895', '13:25']
     assert extract_totals(any_numbers_in_receipt) == []
+
+
+def test__extract_totals__return_none_from_all_numbers_if_got_none_():
+    assert extract_totals(None) is None
