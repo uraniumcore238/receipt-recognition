@@ -136,6 +136,5 @@ failures
 temp/
 Downloads/
 
-get_import_file.py
-*.csv
-/.vscode/settings.json
+.data/
+.db
