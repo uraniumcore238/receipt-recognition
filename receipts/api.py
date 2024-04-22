@@ -1,9 +1,35 @@
 from fastapi import FastAPI
-from receipts.total_from_receipt import total_from_receipt
+from pydantic import BaseModel
+from receipts.text_to_sum import extract_total_lines, extract_totals, read_receipt
 
 app = FastAPI()
 
 
-@app.post("/extract_total/")
-async def extract_total_from_text(file_path: str) -> float| None:
-    return total_from_receipt(file_path)
+class ResponseTotal(BaseModel):
+    """Return total value from the receipt."""
+
+    total: float
+
+
+class Receipt(BaseModel):
+    """Receipt model."""
+
+    receipt_text: str
+
+
+@app.post("/total_from_text/")
+def extract_total_from_text(text_from_receipt: Receipt) -> ResponseTotal:
+    text = text_from_receipt.receipt_text
+    list_of_strings_under_total = extract_total_lines(text)
+    list_of_numbers = extract_totals(list_of_strings_under_total)
+    total = max(list_of_numbers)
+    return ResponseTotal(total=total)
+
+
+@app.post("/total_from_file/")
+def extract_total_from_file(receipt_path: str) -> ResponseTotal:
+    receipt_text = read_receipt(receipt_path)
+    list_of_strings_under_total = extract_total_lines(receipt_text)
+    list_of_numbers = extract_totals(list_of_strings_under_total)
+    total = max(list_of_numbers)
+    return ResponseTotal(total=total)

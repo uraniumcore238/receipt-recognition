@@ -1,4 +1,6 @@
 import datetime
+from unittest.mock import patch
+
 import pytest
 
 from faker import Faker
@@ -8,14 +10,26 @@ NOT_SET = '___'
 
 
 @pytest.fixture
-def make_receipt(faker):
+def make_receipt(faker, today_date):
     faker = Faker
 
-    def inner(total_part: str = NOT_SET):
-        title_part = 'Test title'
+    def inner(total_part: str = NOT_SET) -> str:
+        title_part = 'Test title receipt'
         items_part = 'milk - 100.00\n, bread - 50.22\n'
-        total_part = faker.pystr(150.22) if total_part is NOT_SET else total_part
-        end_part = str(datetime.datetime.now().date())
-        return '\n'.join([title_part, items_part, total_part, end_part])
+        total_part = faker.pystr(min_chars=10, max_chars=100, prefix='total', suffix='150.15') \
+            if total_part is NOT_SET else total_part
+        end_part = str(today_date)
+        return f'{title_part}\n{items_part}\n{total_part}\n{end_part}'
 
     return inner
+
+
+@pytest.fixture
+def extract_total_lines_mock():
+    with patch('receipts.text_to_sum.extract_total_lines') as mock:
+        yield mock
+
+
+@pytest.fixture
+def today_date():
+    return datetime.datetime.now().date()
