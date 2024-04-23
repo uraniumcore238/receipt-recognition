@@ -1,36 +1,44 @@
 import re
+from pathlib import Path
+import tests
 
-total_synonyms = ['Sum', 'Grand Total', 'Total', 'ΣΥΝΟΛΟ']
+SYMBOLS_AFTER_TOTAL = 60
+decimal_pattern = re.compile(r"-?\d+(?:,\d+|\.\d+)")
 
 
-def read_file(file_path: str) -> str:
-    with open(file_path, 'r', encoding='utf-8') as file:
+def read_file_data(file_path: Path) -> list[str]:
+    with open(file_path, "r", encoding="utf-8") as file:
+        return file.readlines()
+
+
+def read_receipt(file_path: str) -> str:
+    with open(file_path, "r", encoding="utf-8") as file:
         lines = file.readlines()
-        text = ''.join(lines)
-        return text
+        return ''.join(lines)
 
 
-def extract_total_lines(file_str: str, synonyms: list[str]) -> list[str] | None:
+def extract_total_lines(file_str: str) -> list[str] | None:
+    synonyms = read_file_data(Path(tests.__file__).parent.parent.joinpath('data/total_synonyms.txt'))
     for syn in synonyms:
-        start_index = file_str.find(syn)
-        end_index = file_str.find(syn)+60
-        if syn in file_str:
-            extracted_text = [file_str[start_index:end_index]]
-            return extracted_text
+        syn_no_spaces = syn.strip()
+        if syn_no_spaces in file_str:
+            start_index = file_str.find(syn_no_spaces)
+            end_index = start_index + SYMBOLS_AFTER_TOTAL
+            return [file_str[start_index:end_index]]
     return None
 
 
-def extract_totals(total_lines: list[str] | None) -> list[float] | None:
+def potential_totals(line: str) -> list[float]:
     numbers = []
-    decimal_pattern = re.compile(r'-?\d+(?:,\d+|\.\d+)')
-    if total_lines is not None:
+    decimal_p = decimal_pattern
+    numbers.extend([float(num.replace(",", ".")) for num in decimal_p.findall(line)])
+    return numbers
+
+
+def extract_totals(total_lines: list[str]) -> list[float]:
+    numbers = []
+    if total_lines:
         for line in total_lines:
-            numbers.extend([float(num.replace(',', '.')) for num in decimal_pattern.findall(line)])
+            numbers.extend(potential_totals(line))
         return numbers
-    return None
-
-
-def get_max_number(numbers: list[float] | None) -> float | None:
-    if numbers is not None:
-        return max(numbers)
-    return None
+    return []
