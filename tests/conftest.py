@@ -16,8 +16,8 @@ def make_receipt(faker, today_date):
     def inner(total_part: str = NOT_SET) -> str:
         title_part = 'Test title receipt'
         items_part = 'milk - 100.00\n, bread - 50.22\n'
-        total_part = faker.pystr(min_chars=10, max_chars=100, prefix='total', suffix='150.15') \
-            if total_part is NOT_SET else total_part
+        if total_part is NOT_SET:
+            total_part = faker.pystr(min_chars=10, max_chars=100, prefix='total', suffix='150.15')
         end_part = str(today_date)
         return f'{title_part}\n{items_part}\n{total_part}\n{end_part}'
 

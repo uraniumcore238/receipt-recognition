@@ -17,7 +17,7 @@ class Receipt(BaseModel):
     receipt_text: str
 
 
-@app.post("/total_from_text/")
+@app.post("/api/v1/extract-total")
 def extract_total_from_text(text_from_receipt: Receipt) -> ResponseTotal:
     text = text_from_receipt.receipt_text
     list_of_strings_under_total = extract_total_lines(text)

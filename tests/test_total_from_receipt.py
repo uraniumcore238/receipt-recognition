@@ -1,33 +1,30 @@
 import datetime
 from pathlib import Path
-from unittest.mock import patch
+from unittest.mock import patch, mock_open
+
+
 from receipts.text_to_sum import extract_totals, extract_total_lines, read_file_data, \
-    potential_totals
+    potential_totals, read_receipt
 
 
 def test__read_file_data__return_file_value_as_list():
-    with patch("receipts.text_to_sum.open") as open_mock:
-        open_mock.return_value.__enter__.return_value.readlines.return_value = ["line1\n",
-                                                                                "line2\n",
-                                                                                "line3\n"]
+    with patch("builtins.open", new_callable=mock_open, read_data="line1\nline2\n"):
         file_path = Path("test.txt")
         result = read_file_data(file_path)
-        assert result == ["line1\n", "line2\n", "line3\n"]
+        assert result == ["line1\n", "line2\n"]
 
 
 def test__read_receipt__return_file_value_as_string():
     with patch("receipts.text_to_sum.open") as open_mock:
         open_mock.return_value.__enter__.return_value.readlines.return_value = ("line1\nline2\n"
                                                                                 "line3\n")
-        file_path = Path("test.txt")
-        result = read_file_data(file_path)
+        file_path = str(Path("test.txt"))
+        result = read_receipt(file_path)
         assert result == "line1\nline2\nline3\n"
 
 
 def test__extract_total_lines__return_list_of_nums_after_total():
-    assert (extract_total_lines('0,00\n2,27\n2,27\nTotal\n1,63\n34,77\n36,40\n0124692544/03\n'
-                                '15.02.24 18:55') ==
-            ['Total\n1,63\n34,77\n36,40\n0124692544/03\n15.02.24 18:55'])
+    assert extract_total_lines('1,63\nTotal\n34,77\n36,40') == ['Total\n34,77\n36,40']
 
 
 def test__extract_total_lines__return_list_of_nums_after_total_but_no_more_than_limit():
