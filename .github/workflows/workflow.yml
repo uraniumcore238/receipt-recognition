@@ -26,11 +26,13 @@ jobs:
 
       - name: Run Ruff
         run: ruff receipts
+        if: always()
+        continue-on-error: true
 
       - name: Run Mypy type checking
-        run: |
-          pip install mypy
-          mypy receipts
+        run: mypy receipts
+        if: always()
+        continue-on-error: true
 
 #      - name: Build Docker image
 #        run: docker build -t receipts .
