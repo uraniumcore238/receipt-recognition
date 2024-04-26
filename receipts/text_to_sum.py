@@ -1,20 +1,16 @@
 import re
 from pathlib import Path
 
-import tests
 
 SYMBOLS_AFTER_TOTAL = 60
 decimal_pattern = re.compile(r"-?\d+(?:,\d+|\.\d+)")
 
-# synonyms_file = Path('data') / 'total_synonyms.txt'
-synonyms_file = Path(tests.__file__).parent.parent.joinpath('data/total_synonyms.txt')
-
+synonyms_file = Path('data') / 'total_synonyms.txt'
 synonyms = synonyms_file.read_text(encoding="utf-8").splitlines()
 
 
 def read_receipt(file_path: str) -> str:
-    text = Path(file_path).read_text(encoding="utf-8")
-    return text
+    return Path(file_path).read_text(encoding="utf-8")
 
 
 def extract_total_lines(file_str: str) -> list[str]:
