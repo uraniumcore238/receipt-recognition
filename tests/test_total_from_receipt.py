@@ -52,5 +52,6 @@ def test__potential_totals__return_floats_from_the_string():
                                 '15.02.24 18:55 123456789123456789') ==
             [0.0, 2.27, 2.27, 1.63, 34.77, 36.4, 15.02])
 
+
 def test__potential_totals__return_empty_list_if_got_empty_string():
     assert potential_totals('') == []
