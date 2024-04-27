@@ -3,8 +3,10 @@ name: Receipts
 on:
   pull_request:
     branches:
-      - main, '*'
-
+      - main
+  push:
+    branches:
+      - '*'
 jobs:
   autotests:
     name: Run receipts service
