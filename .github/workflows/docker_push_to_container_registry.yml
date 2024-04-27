@@ -6,19 +6,19 @@ on:
       - main
 
 jobs:
-  build-and-push:
-    name: Build and Push Docker Image
+  build-svc:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v2
+        name: Checkout repository
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
-
-      - name: Log in to Container Registry
-        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin "${{ secrets.DOCKER_REGISTRY }}"
-
-      - name: Build and push Docker image
-        run: |
-          docker buildx build --platform linux/amd64,linux/arm64 -t ${{ secrets.DOCKER_REGISTRY }}/receipts:latest . --push          
+      - uses: pmorelli92/github-container-registry-build-push@2.2.1
+        name: Build and Publish latest service image
+        with:
+          github-push-secret: ${{secrets.GITHUB_TOKEN}}
+          docker-image-name: receipts
+          docker-image-tag: latest # optional
+          dockerfile-path: Dockerfile # optional
+          build-context: . # optional
+          build-only: false # optional
+          docker-build-args: FOO=BAR,OTHER=VALUE # optional
