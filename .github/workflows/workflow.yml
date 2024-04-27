@@ -1,0 +1,44 @@
+name: Receipts
+
+on:
+  push:
+    branches-ignore:
+      - '!main'
+
+jobs:
+  autotests:
+    name: Run receipts service
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python 3.x
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install poetry
+          poetry export -f requirements.txt -o requirements.txt
+          pip install -r requirements.txt
+
+      - name: Run Ruff
+        run: ruff receipts
+        if: always()
+        continue-on-error: true
+
+      - name: Run Mypy type checking
+        run: mypy receipts
+        if: always()
+        continue-on-error: true
+
+#      - name: Build Docker image
+#        run: docker build -t receipts .
+
+      - name: Run tests
+        run: pytest .
+
+
+

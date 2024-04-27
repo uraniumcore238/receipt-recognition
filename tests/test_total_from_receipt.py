@@ -1,33 +1,19 @@
 import datetime
-from pathlib import Path
-from unittest.mock import patch
-from receipts.text_to_sum import extract_totals, extract_total_lines, read_file_data, \
-    potential_totals
+from unittest.mock import patch, MagicMock
+from receipts.text_to_sum import potential_totals, extract_totals, extract_total_lines, \
+    read_receipt
 
 
-def test__read_file_data__return_file_value_as_list():
-    with patch("receipts.text_to_sum.open") as open_mock:
-        open_mock.return_value.__enter__.return_value.readlines.return_value = ["line1\n",
-                                                                                "line2\n",
-                                                                                "line3\n"]
-        file_path = Path("test.txt")
-        result = read_file_data(file_path)
-        assert result == ["line1\n", "line2\n", "line3\n"]
-
-
-def test__read_receipt__return_file_value_as_string():
-    with patch("receipts.text_to_sum.open") as open_mock:
-        open_mock.return_value.__enter__.return_value.readlines.return_value = ("line1\nline2\n"
-                                                                                "line3\n")
-        file_path = Path("test.txt")
-        result = read_file_data(file_path)
-        assert result == "line1\nline2\nline3\n"
+@patch('receipts.text_to_sum.Path')
+def test_read_receipt_with_mocked_text(mock_path):
+    mock_read_text = MagicMock(return_value="line1\nline2\n")
+    mock_path.return_value.read_text = mock_read_text
+    result = read_receipt("path/to/your/file")
+    assert result == "line1\nline2\n"
 
 
 def test__extract_total_lines__return_list_of_nums_after_total():
-    assert (extract_total_lines('0,00\n2,27\n2,27\nTotal\n1,63\n34,77\n36,40\n0124692544/03\n'
-                                '15.02.24 18:55') ==
-            ['Total\n1,63\n34,77\n36,40\n0124692544/03\n15.02.24 18:55'])
+    assert extract_total_lines('1,63\nTotal\n34,77\n36,40') == ['Total\n34,77\n36,40']
 
 
 def test__extract_total_lines__return_list_of_nums_after_total_but_no_more_than_limit():
@@ -38,7 +24,7 @@ def test__extract_total_lines__return_list_of_nums_after_total_but_no_more_than_
 
 def test__extract_total_lines__return_none_if_total_not_found(make_receipt):
     receipt = make_receipt(total_part="unknown")
-    assert extract_total_lines(receipt) is None
+    assert extract_total_lines(receipt) == []
 
 
 def test__extract_total_lines__return_lines_below_total_if_total_found(make_receipt):

@@ -1,31 +1,26 @@
 import re
 from pathlib import Path
-import tests
+
 
 SYMBOLS_AFTER_TOTAL = 60
 decimal_pattern = re.compile(r"-?\d+(?:,\d+|\.\d+)")
 
-
-def read_file_data(file_path: Path) -> list[str]:
-    with open(file_path, "r", encoding="utf-8") as file:
-        return file.readlines()
+synonyms_file = Path('data') / 'total_synonyms.txt'
+synonyms = synonyms_file.read_text(encoding="utf-8").splitlines()
 
 
 def read_receipt(file_path: str) -> str:
-    with open(file_path, "r", encoding="utf-8") as file:
-        lines = file.readlines()
-        return ''.join(lines)
+    return Path(file_path).read_text(encoding="utf-8")
 
 
-def extract_total_lines(file_str: str) -> list[str] | None:
-    synonyms = read_file_data(Path(tests.__file__).parent.parent.joinpath('data/total_synonyms.txt'))
+def extract_total_lines(file_str: str) -> list[str]:
     for syn in synonyms:
         syn_no_spaces = syn.strip()
         if syn_no_spaces in file_str:
             start_index = file_str.find(syn_no_spaces)
             end_index = start_index + SYMBOLS_AFTER_TOTAL
             return [file_str[start_index:end_index]]
-    return None
+    return []
 
 
 def potential_totals(line: str) -> list[float]:
