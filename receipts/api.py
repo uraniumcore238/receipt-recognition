@@ -26,8 +26,8 @@ def extract_total_from_text(text_from_receipt: Receipt) -> ResponseTotal:
     return ResponseTotal(total=total)
 
 
-@app.post("/total_from_file/")
-def extract_total_from_file(receipt_path: str) -> ResponseTotal:
+@app.post("/api/v1/total_from_file")
+def extract_total_from_file_path(receipt_path: str) -> ResponseTotal:
     receipt_text = read_receipt(receipt_path)
     list_of_strings_under_total = extract_total_lines(receipt_text)
     list_of_numbers = extract_totals(list_of_strings_under_total)

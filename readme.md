@@ -59,3 +59,14 @@ You will see the JSON response as:
 
 
 pytest --cov=receipts .
+
+
+docker login --username uraniumcore238@gmail.com --password ........ ghcr.io
+
+docker build . -t ghcr.io/uraniumcore238/receipts:latest
+
+docker push ghcr.io/uraniumcore238/receipts:latest
+
+docker image ls uraniumcore238
+
+docker run ghcr.io/uraniumcore238/receipts:latest

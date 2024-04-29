@@ -1,24 +1,18 @@
-name: Docker Build and Push
+name: Docker Build receipts image
 
 on:
   push:
-    branches:
-      - main
+   
 
 jobs:
   build-svc:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-        name: Checkout repository
-
-      - uses: pmorelli92/github-container-registry-build-push@2.2.1
-        name: Build and Publish latest service image
-        with:
-          github-push-secret: ${{secrets.GITHUB_TOKEN}}
-          docker-image-name: receipts
-          docker-image-tag: latest # optional
-          dockerfile-path: Dockerfile # optional
-          build-context: . # optional
-          build-only: false # optional
-          docker-build-args: FOO=BAR,OTHER=VALUE # optional
+      - uses: actions/checkout@v3
+      - name: Build and push the image
+        run: |
+          docker login --username uraniumcore238@gmail.com --password ${{secrets.GH_RECEIPTS_TOKEN}} ghcr.io
+          docker build . -t ghcr.io/uraniumcore238/receipts:latest
+          docker push ghcr.io/uraniumcore238/receipts:latest
+  
+        
