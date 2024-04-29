@@ -70,3 +70,4 @@ docker push ghcr.io/uraniumcore238/receipts:latest
 docker image ls uraniumcore238
 
 docker run ghcr.io/uraniumcore238/receipts:latest
+

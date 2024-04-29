@@ -13,6 +13,5 @@ jobs:
         run: |
           docker login --username uraniumcore238@gmail.com --password ${{secrets.GH_RECEIPTS_TOKEN}} ghcr.io
           docker build . -t ghcr.io/uraniumcore238/receipts:latest
-          docker push ghcr.io/uraniumcore238/receipts:latest
-  
+          docker push ghcr.io/uraniumcore238/receipts:latest  
         
