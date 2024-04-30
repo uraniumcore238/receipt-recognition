@@ -16,14 +16,17 @@ jobs:
 
       - name: Set up Python 3.x
         uses: actions/setup-python@v4
-        with:
-          python-version: '3.x'
+        with: 
+          python-version: '3.x'          
 
       - name: Install dependencies
         run: |
           python -m pip install -U pip poetry
           poetry export -f requirements.txt -o requirements.txt
           pip install -r requirements.txt
+          with: |            
+            tool.poetry.group.lint.dependencies
+            tool.poetry.group.tests.dependencies
 
       - name: Run Ruff
         run: ruff receipts
