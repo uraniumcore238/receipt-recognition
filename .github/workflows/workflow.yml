@@ -22,7 +22,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install -U pip poetry
-          poetry export -f requirements.txt -o requirements.txt --with {lint,tests}
+          poetry export -f --with {lint,tests} requirements.txt -o requirements.txt 
           pip install -r requirements.txt      
 
       - name: Run Ruff
