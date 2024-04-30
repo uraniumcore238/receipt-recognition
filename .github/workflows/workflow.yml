@@ -21,7 +21,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          python -m pip install -U pip poetry --with tool.poetry.group.lint.dependencies,tool.poetry.group.tests.dependencies
+          python -m pip install -U pip poetry --with {tool.poetry.group.lint.dependencies,tool.poetry.group.tests.dependencies}
           poetry export -f requirements.txt -o requirements.txt
           pip install -r requirements.txt      
 
