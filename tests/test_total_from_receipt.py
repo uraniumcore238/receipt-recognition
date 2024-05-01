@@ -6,10 +6,10 @@ from receipts.text_to_sum import potential_totals, extract_totals, extract_total
 
 
 @patch('receipts.text_to_sum.Path')
-def test__read_receipt__with_mocked_text(mock_path):
+def test__read_receipt__with_mocked_text(mock_path, filepath):
     mock_read_text = MagicMock(return_value="line1\nline2\n")
     mock_path.return_value.read_text = mock_read_text
-    result = read_receipt("path/to/your/file")
+    result = read_receipt(filepath)
     assert result == "line1\nline2\n"
 
 

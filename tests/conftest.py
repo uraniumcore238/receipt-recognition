@@ -33,3 +33,7 @@ def extract_total_lines_mock():
 @pytest.fixture
 def today_date():
     return datetime.datetime.now().date()
+
+@pytest.fixture
+def filepath():
+    return "filepath"

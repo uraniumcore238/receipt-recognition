@@ -5,8 +5,12 @@ from pathlib import Path
 SYMBOLS_AFTER_TOTAL = 60
 decimal_pattern = re.compile(r"-?\d+(?:,\d+|\.\d+)")
 
-synonyms_file = Path('data') / 'total_synonyms.txt'
+
+def synonyms_file() -> Path:
+    return Path('data') / 'total_synonyms.txt'
+
 synonyms = synonyms_file.read_text(encoding="utf-8").splitlines()
+
 
 
 def read_receipt(file_path: str) -> str:
