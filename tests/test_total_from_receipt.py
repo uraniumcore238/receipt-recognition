@@ -1,14 +1,15 @@
 import datetime
+
 from unittest.mock import patch, MagicMock
 from receipts.text_to_sum import potential_totals, extract_totals, extract_total_lines, \
     read_receipt
 
 
 @patch('receipts.text_to_sum.Path')
-def test_read_receipt_with_mocked_text(mock_path):
+def test__read_receipt__with_mocked_text(mock_path, filepath):
     mock_read_text = MagicMock(return_value="line1\nline2\n")
     mock_path.return_value.read_text = mock_read_text
-    result = read_receipt("path/to/your/file")
+    result = read_receipt(filepath)
     assert result == "line1\nline2\n"
 
 
@@ -22,7 +23,7 @@ def test__extract_total_lines__return_list_of_nums_after_total_but_no_more_than_
             ['Total\n1,63\n34,77\n36,40\n0124692544/03\n15.02.24 18:55 12345678'])
 
 
-def test__extract_total_lines__return_none_if_total_not_found(make_receipt):
+def test__extract_total_lines__return_empty_list_if_total_not_found(make_receipt):
     receipt = make_receipt(total_part="unknown")
     assert extract_total_lines(receipt) == []
 
@@ -32,6 +33,12 @@ def test__extract_total_lines__return_lines_below_total_if_total_found(make_rece
     today = datetime.date.today()
     assert extract_total_lines(receipt) == [f'total: 150.22\n{today}']
 
+def test__extract_total_lines__return_lines_below_total_if_total_not_set(make_receipt):    
+    receipt = make_receipt()
+    today = datetime.date.today()
+    expected_lines = [f'total 150.15\n{today}']
+    total = extract_total_lines(receipt)
+    assert total == expected_lines
 
 def test__extract_totals__return_only_floats_from_all_numbers():
     any_numbers_in_receipt = ['15.22', '150,5', '147', '0007895', '13:25']

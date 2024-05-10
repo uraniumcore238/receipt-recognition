@@ -11,13 +11,13 @@ NOT_SET = '___'
 
 @pytest.fixture
 def make_receipt(faker, today_date):
-    faker = Faker
+    faker = Faker()
 
     def inner(total_part: str = NOT_SET) -> str:
         title_part = 'Test title receipt'
         items_part = 'milk - 100.00\n, bread - 50.22\n'
         if total_part is NOT_SET:
-            total_part = faker.pystr(min_chars=10, max_chars=100, prefix='total', suffix='150.15')
+            total_part = faker.pystr(min_chars=10, max_chars=15, suffix='total 150.15')
         end_part = str(today_date)
         return f'{title_part}\n{items_part}\n{total_part}\n{end_part}'
 
@@ -33,3 +33,7 @@ def extract_total_lines_mock():
 @pytest.fixture
 def today_date():
     return datetime.datetime.now().date()
+
+@pytest.fixture
+def filepath():
+    return "filepath"

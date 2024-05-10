@@ -1,0 +1,17 @@
+name: Docker Build receipts image
+
+on:
+  push:
+   
+
+jobs:
+  build-svc:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build and push the image
+        run: |
+          docker login --username uraniumcore238@gmail.com --password ${{secrets.GH_RECEIPTS_TOKEN}} ghcr.io
+          docker build . -t ghcr.io/uraniumcore238/receipts:latest
+          docker push ghcr.io/uraniumcore238/receipts:latest  
+        

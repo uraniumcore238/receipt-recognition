@@ -12,4 +12,3 @@ tests:
 
 check:
 	make -j3 style types tests
-

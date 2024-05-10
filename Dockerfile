@@ -5,16 +5,14 @@ ENV POETRY_VERSION=1.8.2 \
 
 RUN apt-get update && apt-get install --no-install-recommends -y && rm -rf /var/lib/apt/lists/*
 
-RUN python -m pip install --upgrade pip
-RUN pip install poetry
+RUN python -m pip install -U pip poetry
 ENV PATH="$POETRY_HOME/bin:$PATH"
 
 WORKDIR /app
 
 COPY pyproject.toml poetry.lock ./
 
-RUN poetry export -f requirements.txt -o requirements.txt
-RUN pip install -r requirements.txt
+RUN poetry export -f requirements.txt -o requirements.txt && pip install -r requirements.txt
 
 COPY receipts /app/receipts
 COPY data /app/data
